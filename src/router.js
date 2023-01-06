@@ -19,10 +19,10 @@ const requireAuth = async (to, from, next) => {
 }
 
 const routes = [
-     { path: "/editar/:id", component: Editar, beforeEnter: requireAuth },
-     { path: '/', component: Home, beforeEnter: requireAuth },
-     { path: '/Login', component: Login },
-     { path: '/Register', component: Register },
+     { path: "/editar/:id", component: Editar, beforeEnter: requireAuth, name: 'Editar' },
+     { path: '/', component: Home, beforeEnter: requireAuth, name: 'Home' },
+     { path: '/Login', component: Login, name: 'Login' },
+     { path: '/Register', component: Register, name: 'Register' },
 
 ]
 const history = createWebHistory();

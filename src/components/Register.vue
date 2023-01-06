@@ -18,18 +18,27 @@ import { ref } from "vue";
 import { useUserStore } from "../stores/user";
 //import { useRouter } from 'vue-router';
 import { async } from "@firebase/util";
+import { message } from "ant-design-vue";
 
 const userStore = useUserStore();
 //const router = useRouter();
 const email = ref("");
 const password = ref("");
 
-const handleSubmit = async () => {
-     if (!email.value || password.value.length < 6) {
-          return alert("ingresa los campos");
+const onFinish = async (values) => {
+     console.log("Success:", values);
+     const res = await userStore.registerUser(values.email, values.password);
+     if (!res) {
+          return message.success("Revisa tu correo electrónico para continuar");
+     }
+     switch (res) {
+          case "auth/email-already-in-use":
+               message.error("Correo ya registrado");
+               break;
+          default:
+               message.error('occurio un error en el servidor');
+               break;
      }
 
-     await userStore.registerUser(email.value, password.value);
-     // router.push('/')
 };
 </script>

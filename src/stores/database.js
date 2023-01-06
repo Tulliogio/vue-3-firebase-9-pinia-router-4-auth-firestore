@@ -82,6 +82,7 @@ export const useDatabaseStore = defineStore("database", {
                }
           },
           async addUrl(name) {
+               this.loadingURL = true;
                this.loadingDoc = true;
                try {
                     const docObjeto = {
@@ -96,6 +97,7 @@ export const useDatabaseStore = defineStore("database", {
                     console.log(error);
                } finally {
                     this.loadingDoc = false;
+                    this.loadingURL = false;
                }
           },
           async deleteUrl(id) {

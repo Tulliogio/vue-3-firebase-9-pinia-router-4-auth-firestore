@@ -1,50 +1,46 @@
 <template>
-     <div>
-          <h1>Home </h1>
-          <p>{{ userStore.userData?.email }}</p>
-          <form @submit.prevent="handleSubmit">
-               <input type="text" placeholder="Ingrese URL" v-model="url">
-               <button type="submit">Agregar</button>
+     <div class="container">
+          <h1 class="">Home</h1>
 
+          <add-form></add-form>
 
-          </form>
-          <p v-if="databaseStore.loadingDoc">Loading docs..</p>
-          <ul v-else>
-               <li v-for="item of databaseStore.documents" :key="item.id">
-                    {{ item.id }}
-                    <br>
-                    {{ item.name }}
-                    <br>
-                    {{ item.short }}
-                    <div>
-                         <button @click="databaseStore.deleteUrl(item.id)" :disabled="databaseStore.loadingDoc">
-                              Eliminar
-                         </button>
-                         <button @click="router.push(`/editar/${item.id}`)">
-                              Editar
-                         </button>
-                    </div>
-               </li>
-          </ul>
+          <a-spin v-if="databaseStore.loadingDoc" />
+
+          <a-space direction="vertical" style="width: 100%">
+               <a-card v-for="item of databaseStore.documents" :key="item.id" :title="item.short">
+                    <template #extra>
+                         <a-space>
+                              <a-button @click="router.push(`/editar/${item.id}`)">Editar</a-button>
+                              <a-popconfirm title="¿Estás seguro?" ok-text="Yes" cancel-text="No"
+                                   @confirm="confirm(item.id)" @cancel="cancel">
+                                   <a-button danger>Eliminar</a-button>
+                              </a-popconfirm>
+                         </a-space>
+                    </template>
+                    <p>{{ item.name }}</p>
+               </a-card>
+          </a-space>
      </div>
 </template>
 
-
-
 <script setup>
-import { useUserStore } from '../stores/user';
-import { useDatabaseStore } from '../stores/database';
-import { ref } from 'vue';
-import { onBeforeMount } from "vue";
+import { useDatabaseStore } from "../stores/database";
 import { useRouter } from "vue-router";
+import { message } from "ant-design-vue";
 
 const databaseStore = useDatabaseStore();
-const userStore = useUserStore();
 const router = useRouter();
-databaseStore.getUrls();
-const url = ref('');
 
-const handleSubmit = () => {
-     databaseStore.addUrl(url.value);
-}
+const confirm = (id) => {
+     console.log(id);
+     databaseStore.deleteUrl(id);
+     message.success("Eliminado");
+};
+
+const cancel = (e) => {
+     console.log(e);
+     message.error("No se eliminó");
+};
+
+databaseStore.getUrls();
 </script>
