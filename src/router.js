@@ -7,6 +7,7 @@ import Login from "./components/Login.vue";
 import Register from "./components/Register.vue";
 import Editar from "./components/Editar.vue"
 import NotFound from "./components/NotFound.vue";
+import Perfil from "./components/Perfil.vue";
 
 const requireAuth = async (to, from, next) => {
      const userStore = useUserStore();
